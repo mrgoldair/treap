@@ -1,0 +1,23 @@
+{
+  "name": "treap",
+  "version": "1.0.0",
+  "description": "An implementation of a treap data structure",
+  "main": "treap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrgoldair/treap.git"
+  },
+  "keywords": [
+    "treap",
+    "data-structures"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrgoldair/treap/issues"
+  },
+  "homepage": "https://github.com/mrgoldair/treap#readme"
+}
