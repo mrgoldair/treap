@@ -94,14 +94,14 @@ export class Treap<T,Number> {
 		parent.parent = node;
 	}
 
-	insert(key:T, priority:number):void {
+	insert(key:T):void {
 		
 		// our starting not – the root
 		let node = this.root;
 		// hold our ref for eventual parent
 		let parent:Node<T,Number>;
 		// the node being inserted
-		let newNode:Node<T,Number> = new Node<T,Number>(key,priority);
+		let newNode:Node<T,Number> = new Node<T,Number>(key, Math.random());
 
 		// we want to know the parent node when either left or right is null, aka a leaf
 		while( node != null ){
@@ -139,11 +139,7 @@ export class Treap<T,Number> {
 		}
 	}
 
-	search(key:T):Node<T,Number> | null {
-		return this._search(this.root, key);
-	}
-
-	private _search(node:Node<T,Number>, key:T):Node<T,Number> | null {
+	private search(node:Node<T,Number>, key:T):Node<T,Number> | null {
 		// cannot find the key
 		if( node == null ){
 			return null;
@@ -152,10 +148,10 @@ export class Treap<T,Number> {
 			return node;
 		// key is smaller, recursively search left branch
 		} else if( key < node.key ){
-			return this._search(node.left, key);
+			return this.search(node.left, key);
 		// key is larger, recursively search the right branch
 		} else {
-			return this._search(node.right, key);
+			return this.search(node.right, key);
 		}
 	}
 
@@ -166,7 +162,7 @@ export class Treap<T,Number> {
 	 * @param key T - the key of the node to remove
 	 */
 	remove(key:T):boolean {
-		let node = this.search(key);
+		let node = this.search(this.root, key);
 
 		// no node
 		if( node == null ) {
@@ -214,7 +210,7 @@ export class Treap<T,Number> {
 	 * @param key 
 	 */
 	contains(key:T):boolean {
-		return this.search(key) != null;
+		return this.search(this.root, key) != null;
 	}
 
 	/**
@@ -260,7 +256,21 @@ export class Treap<T,Number> {
 	 * @param priority the new priority
 	 */
 	update(key:T, priority:number):void {
-		let node = this.search(key);
-				
+		let node = this.search(this.root, key);
+
+		if( node == null ) return;
+
+		// update
+		node.priority = priority;
+
+		// priority vs parent
+		while( node.priority < node.parent.priority ){
+			this.rotateRight(node);
+		}
+
+		// priority vs child
+		while( node.priority > node.highestPriorityChild().priority ){
+			this.rotateLeft(node);
+		}
 	}
 }
