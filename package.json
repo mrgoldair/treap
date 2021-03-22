@@ -1,6 +1,6 @@
 {
-  "name": "treap",
-  "version": "1.0.0",
+  "name": "@mrgoldair/treap",
+  "version": "0.1.0",
   "description": "An implementation of a treap data structure",
   "main": "treap.js",
   "scripts": {
@@ -19,5 +19,10 @@
   "bugs": {
     "url": "https://github.com/mrgoldair/treap/issues"
   },
-  "homepage": "https://github.com/mrgoldair/treap#readme"
+  "homepage": "https://github.com/mrgoldair/treap#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.21",
+    "fast-check": "^2.14.0",
+    "jest": "^26.6.3"
+  }
 }
