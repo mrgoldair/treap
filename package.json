@@ -4,7 +4,25 @@
   "description": "An implementation of a treap data structure",
   "main": "treap.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.json"
+      }
+    },
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/specs/*.+(ts|tsx|js)"
+    ]
   },
   "repository": {
     "type": "git",
@@ -21,8 +39,9 @@
   },
   "homepage": "https://github.com/mrgoldair/treap#readme",
   "devDependencies": {
-    "@types/jest": "^26.0.21",
+    "@types/jest": "^26.0.22",
     "fast-check": "^2.14.0",
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.4"
   }
 }
