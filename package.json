@@ -21,7 +21,7 @@
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
     "testMatch": [
-      "**/specs/*.+(ts|tsx|js)"
+      "**/spec/*.+(ts|tsx|js)"
     ]
   },
   "repository": {

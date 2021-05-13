@@ -1,276 +1,321 @@
 
-export class Node<T,Number> {
-	key:T;
-	priority:number
+/**
+ * Treap as an ordered dictionary!
+ */
+export class Node<T,U> {
+  key:T;
+  value?:U;
+  priority:number;
 
-	left:Node<T,Number>;
-	right:Node<T,Number>;
-	parent:Node<T,Number>;
+  left:Node<T,U>;
+  right:Node<T,U>;
+  parent:Node<T,U>;
 
-	constructor(key:T, priority:number){
-		this.key = key;
-		this.priority = priority;
-	}
-	
-	isRoot():boolean {
-		return this.parent == null;
-	}
+  constructor(key:T,priority:number,value?:U) {
+    this.key = key;
+    this.priority = priority;
+    this.value = value;
+  }
+  
+  isRoot(): boolean {
+    return this.parent == null;
+  }
 
-	isLeaf():boolean {
-		return this.left == null && this.right == null;
-	}
+  isLeaf(): boolean {
+    return this.left == null && this.right == null;
+  }
 
-	highestPriorityChild():Node<T,Number> | null {
-		if( this.left && this.right ) {
-			return this.left.priority <= this.right.priority
-							? this.left : this.right;
-		} else {
-			if( this.left ) {
-				return this.left;
-			} else {
-				return this.right;
-			}
-		}
-	}
+  highestPriorityChild(): Node<T,U> {
+    if ( this.left && this.right )
+      return this.left.priority <= this.right.priority
+              ? this.left : this.right;
+
+    if ( this.left )
+      return this.left;
+
+    if ( this.right )
+      return this.right;
+  }
 }
 
-export class Treap<T,Number> {
-	root:Node<T,Number>;
+export class Treap<T,U> {
+  root:Node<T,U>;
 
-	private rotateRight(node:Node<T,number>):void {
+  private rotateRight(node:Node<T,U>): void {
 
-		// cannot rotate single node
-		if( node.isRoot() ) return;
+    // cannot rotate single node
+    if( node.isRoot() )
+      return;
 
-		let parent = node.parent;
-		// node must be the left child; cannot rotate right if it's the right child
-		if( node !== parent.left ) return;
+    let parent = node.parent;
+    // node must be the left child; cannot rotate right if it's the right child
+    if( node !== parent.left ) return;
 
-		let grandparent = parent.parent;
-		// we don't know if the grandparent is null
-		if( grandparent != null ){
-			// we need to put node in the same place as parent was
-			if( grandparent.left == parent ){
-				grandparent.left = node;
-			} else {
-				grandparent.right = node
-			}
-		}
-		// invert our references
-		node.parent = grandparent;
-		parent.left = node.right;
-		if( parent.left ){
-			parent.left.parent = parent;
-		}
-		node.right = parent;
-		parent.parent = node;
-	}
+    let grandparent = parent.parent;
+    // we don't know if the grandparent is null
+    if( grandparent != null ){
+      // we need to put node in the same place as parent was
+      if( grandparent.left == parent ){
+        grandparent.left = node;
+      } else {
+        grandparent.right = node
+      }
+    }
+    // invert our references
+    node.parent = grandparent;
+    parent.left = node.right;
+    if( parent.left )
+      parent.left.parent = parent;
 
-	private rotateLeft(node:Node<T,number>):void {
-		// cannot rotate single node
-		if( node.isRoot() ) return;
+    node.right = parent;
+    parent.parent = node;
+    if( node.isRoot() )
+      this.root = node;
+  }
 
-		let parent = node.parent;
-		// node must be the left child; cannot rotate right if it's the right child
-		if( node !== parent.right ) return;
+  private rotateLeft(node:Node<T,U>): void {
+    // cannot rotate single node
+    if( node.isRoot() )
+      return;
 
-		let grandparent = parent.parent;
-		// we don't know if the grandparent is null
-		if( grandparent != null ){
-			// we need to put node in the same place as parent was
-			if( grandparent.left == parent ){
-				grandparent.left = node;
-			} else {
-				grandparent.right = node
-			}
-		}
-		// invert our references
-		node.parent = grandparent
-		parent.right = node.left;
-		if( parent.right ){
-			parent.right.parent = parent;
-		}
-		node.left = parent;
-		parent.parent = node;
-	}
+    let parent = node.parent;
+    // node must be the left child; cannot rotate right if it's the right child
+    if( node !== parent.right )
+      return;
 
-	insert(key:T):void {
-		
-		// our starting not – the root
-		let node = this.root;
-		// hold our ref for eventual parent
-		let parent:Node<T,Number>;
-		// the node being inserted
-		let newNode:Node<T,Number> = new Node<T,Number>(key, Math.random());
+    let grandparent = parent.parent;
+    // we don't know if the grandparent is null
+    if( grandparent != null ){
+      // we need to put node in the same place as parent was
+      if( parent == grandparent.left ){
+        grandparent.left = node;
+      } else {
+        grandparent.right = node
+      }
+    }
 
-		// we want to know the parent node when either left or right is null, aka a leaf
-		while( node != null ){
-			parent = node;
-			if(key > node.key){
-				node = node.right;
-			} else {
-				node = node.left;
-			}
-		}
+    /**
+     * Need to deal with rotating on root node
+     */
 
-		// our new node is the first node; the root.
-		if( parent == null ){
-			this.root = newNode;
-			return;
-		}
+    // invert our references
+    node.parent = grandparent
+    parent.right = node.left;
+    if( parent.right )
+      parent.right.parent = parent;
 
-		// now we have the parent, we can assign the newNode to its correct leaf position
-		if( key > parent.key ){
-			parent.right = newNode;
-		} else {
-			parent.left = newNode;
-		}
+    node.left = parent;
+    parent.parent = node;
+    if( node.isRoot() )
+      this.root = node;
+  }
 
-		// set the parent
-		newNode.parent = parent;
+  insert(key:T,value?:U): void {
 
-		// reinstate heap invariants
-		while( newNode.parent != null && newNode.priority < newNode.parent.priority ){
-			if( newNode == newNode.parent.left ){
-				this.rotateRight(newNode);
-			} else {
-				this.rotateLeft(newNode);
-			}
-		}
-	}
+    // disallow dupes
+    if ( this.contains(key) )
+      return;
 
-	private search(node:Node<T,Number>, key:T):Node<T,Number> | null {
-		// cannot find the key
-		if( node == null ){
-			return null;
-		// return the matched node
-		} else if( node.key == key ) {
-			return node;
-		// key is smaller, recursively search left branch
-		} else if( key < node.key ){
-			return this.search(node.left, key);
-		// key is larger, recursively search the right branch
-		} else {
-			return this.search(node.right, key);
-		}
-	}
+    // our starting not – the root
+    let node = this.root;
+    // hold our ref for eventual parent
+    let parent:Node<T,U>;
+    // the node being inserted
+    let newNode:Node<T,U> = new Node<T,U>(key,Math.random(),value);
 
-	/**
-	 * By assigning the node an infinitely low priority, when we rotate against
-	 * the highest priority child, we'll progressively push the node downward.
-	 * Once in a leaf position we can simply detach it.
-	 * @param key T - the key of the node to remove
-	 */
-	remove(key:T):boolean {
-		let node = this.search(this.root, key);
+    // we want to know the parent node when either left or right is null, aka a leaf
+    while( node != null ){
+      parent = node;
+      if ( key > node.key ){
+        node = node.right;
+      } else {
+        node = node.left;
+      }
+    }
 
-		// no node
-		if( node == null ) {
-		// or the only node
-			return true;
-		} else if( (node.isLeaf() && node.isRoot()) ){
-			this.root = null;
-			return true;
-		}
+    // our new node is the first node; the root.
+    if( parent == null ){
+      this.root = newNode;
+      return;
+    }
 
-		// assign our infinitely low priority (min heap)
-		node.priority = Number.POSITIVE_INFINITY;
+    // now we have the parent, we can assign the newNode to its correct leaf position
+    if( key > parent.key ){
+      parent.right = newNode;
+    } else {
+      parent.left = newNode;
+    }
 
-		// keep rotating until node is in leaf position
-		while( !node.isLeaf() ){
-			// rotating the highest priority ensures we keep our invariants intact
-			let child = node.highestPriorityChild();
+    // set the parent
+    newNode.parent = parent;
 
-			if( node.isRoot() ){
-				this.root = child;
-			}
+    // reinstate heap invariants
+    while( newNode.parent != null && newNode.priority < newNode.parent.priority ){
+      if( newNode == newNode.parent.left ){
+        this.rotateRight(newNode);
+      } else {
+        this.rotateLeft(newNode);
+      }
+    }
+  }
 
-			// determine which way to rotate
-			if( child == node.left ){
-				this.rotateRight(child);
-			} else {
-				this.rotateLeft(child);
-			}
-		}
+  private search(node:Node<T,U>, key:T): Node<T,U> {
+    // cannot find the key
+    if( node == null )
+      return null;
 
-		// detach parent from child
-		if( node == node.parent.left ){
-			node.parent.left = null;
-		} else {
-			node.parent.right = null;
-		}
-		// detach child from parent
-		node.parent = null;
+    // return the matched node
+    if( node.key == key )
+      return node;
+    
+    // key is smaller, recursively search left branch
+    if( key < node.key )
+      return this.search(node.left, key);
 
-		return true
-	}
+    // key is larger, recursively search the right branch
+    if( key > node.key )
+      return this.search(node.right, key);
+  }
 
-	/**
-	 * 
-	 * @param key 
-	 */
-	contains(key:T):boolean {
-		return this.search(this.root, key) != null;
-	}
+  /**
+   * By assigning the node an infinitely low priority, when we rotate against
+   * the highest priority child, we'll progressively push the node downward.
+   * Once in a leaf position we can simply detach it.
+   * @param key T - the key of the node to remove
+   */
+  remove(key:T): boolean {
+    let node = this.search(this.root, key);
 
-	/**
-	 * 
-	 * @param node - defaults to `root`
-	 */
-	max(node:Node<T,Number> = this.root):T {
+    // no node
+    if( node == null ) {
+    // or the only node
+      return true;
+    } else if( (node.isLeaf() && node.isRoot()) ){
+      this.root = null;
+      return true;
+    }
 
-		// our right-most, max value node
-		if( node.isLeaf() ) return node.key;
+    // assign our infinitely low priority (min heap)
+    node.priority = Number.POSITIVE_INFINITY;
 
-		// it's not a leaf so may have left, right or both
-		if( node.right ) {
-			// if it's got a right, keep going
-			return this.max(node.right);
-		} else {
-			// if all we have is a left, this node is our max
-			return node.key;
-		}
-	}
+    // keep rotating until node is in leaf position
+    while( !node.isLeaf() ){
+      // rotating the highest priority ensures we keep our invariants intact
+      let child = node.highestPriorityChild();
 
-	/**
-	 * 
-	 * @param node - defaults to `root`
-	 */
-	min(node:Node<T,Number> = this.root):T {
-		// our left-most, min value node
-		if( node.isLeaf() ) return node.key;
+      if( node.isRoot() ){
+        this.root = child;
+      }
 
-		// it's not a leaf so may have left, right or both
-		if( node.left ) {
-			// if it's got a right, keep going
-			return this.min(node.left);
-		} else {
-			// if all we have is a left, this node is our max
-			return node.key;
-		}
-	}
+      // determine which way to rotate
+      if( child == node.left ){
+        this.rotateRight(child);
+      } else {
+        this.rotateLeft(child);
+      }
+    }
 
-	/**
-	 * 
-	 * @param key the key for the priority in which we're updating
-	 * @param priority the new priority
-	 */
-	update(key:T, priority:number):void {
-		let node = this.search(this.root, key);
+    // detach parent from child
+    if( node == node.parent.left ){
+      node.parent.left = null;
+    } else {
+      node.parent.right = null;
+    }
+    // detach child from parent
+    node.parent = null;
 
-		if( node == null ) return;
+    return true
+  }
 
-		// update
-		node.priority = priority;
+  /**
+   * 
+   * @param key 
+   * @returns 
+   */
+  contains(key:T): boolean {
+    return this.search(this.root, key) != null;
+  }
 
-		// priority vs parent
-		while( node.priority < node.parent.priority ){
-			this.rotateRight(node);
-		}
+  /**
+   * 
+   * @param node 
+   * @returns 
+   */
+  max(node:Node<T,U> = this.root): T | U {
 
-		// priority vs child
-		while( node.priority > node.highestPriorityChild().priority ){
-			this.rotateLeft(node);
-		}
-	}
+    // our right-most, max value node
+    if ( node.isLeaf() )
+      return node.value ?? node.key;
+
+    // it's not a leaf so may have left, right or both
+    if ( node.right ) {
+      // if it's got a right, keep going
+      return this.max( node.right );
+    } else {
+      // if all we have is a left, this node is our max
+      return node.value ?? node.key;
+    }
+  }
+
+  /**
+   *
+   * @param node – the root of the tree for which we want to find the min key
+   * @returns 
+   */
+  min(node:Node<T,U> = this.root): T | U {
+    // our left-most, min value node
+    if ( node.isLeaf() )
+      return node.value ?? node.key;
+
+    // it's not a leaf so may have left, right or both
+    if ( node.left ) {
+      // if it's got a right, keep going
+      return this.min( node.left );
+    } else {
+      // if all we have is a left, this node is our max
+      return node.key ?? node.key;
+    }
+  }
+
+  /**
+   * 
+   * @param key – the key for the priority in which we're updating
+   * @param priority – the new priority
+   */
+  update(key:T, priority:number): void {
+    let node = this.search(this.root, key);
+
+    if( node == null ) return;
+
+    // update
+    node.priority = priority;
+
+    // priority vs parent
+    while( node.priority < node.parent.priority ){
+      this.rotateRight(node);
+    }
+
+    // priority vs child
+    while( node.priority > node.highestPriorityChild().priority ){
+      this.rotateLeft(node);
+    }
+  }
+
+  /**
+   * 
+   * @param key – the key for which we want to find the predecessor of
+   * @returns – the predecessor of `key`
+   */
+  predecessor(key:T): U {
+    return;
+  }
+
+  /**
+   * 
+   * @param key – the key for which we want to find the predecessor of
+   * @returns – the successor of `key`
+   */
+  successor(key:T): U {
+    return
+  }
 }
