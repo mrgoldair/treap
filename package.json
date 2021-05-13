@@ -1,8 +1,12 @@
 {
   "name": "@mrgoldair/treap",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An implementation of a treap data structure",
-  "main": "treap.js",
+  "homepage": "https://github.com/mrgoldair/treap#readme",
+  "main": "dist/Treap.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "test": "jest"
   },
@@ -14,7 +18,7 @@
     ],
     "globals": {
       "ts-jest": {
-        "tsconfig": "tsconfig.json"
+        "tsconfig": "tsconfig.debug.json"
       }
     },
     "transform": {
@@ -24,20 +28,10 @@
       "**/spec/*.+(ts|tsx|js)"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mrgoldair/treap.git"
-  },
   "keywords": [
     "treap",
     "data-structures"
   ],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mrgoldair/treap/issues"
-  },
-  "homepage": "https://github.com/mrgoldair/treap#readme",
   "devDependencies": {
     "@types/jest": "^26.0.22",
     "fast-check": "^2.14.0",
