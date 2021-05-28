@@ -2,7 +2,11 @@
 
 Is somewhat of a 2-d data structure in that is a combination of a heap and a binary tree. 2-d because there are two orderings: the first ordering is that of the heap in the "y" direction where the min or max is located at the root of the tree and the remaining nodes are only ordered as paths from root to leaves, not amogst siblings (a partial ordering). The second, "x" direction, ordering the binary search tree where keys are ordered from left to right. Given a root N, the key of left node L is less than N, while the right node R is greater than N. These two properties give us our biderectional ordering and the invariants of both heap and binary tree properties are what we keep as the contract of our API.
 
+#### TODO
 
+- Implement custom comparison function for Treap. Tricky because in thise case we need a dynamic value that is not part of the key/values stored.
+  - Implement the comparator funciton as a closure and capture the `x-pos` of the sweep line
+  - How to best represent results of comparison?
 
 #### Representation
 

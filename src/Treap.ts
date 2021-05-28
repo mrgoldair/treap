@@ -40,6 +40,11 @@ export class Node<T,U> {
 
 export class Treap<T,U> {
   root:Node<T,U>;
+  comparator:(a:T,b:T) => number;
+  
+  constructor(comparator?:(a:T,b:T) => number){
+    this.comparator = comparator;
+  }
 
   private rotateRight(node:Node<T,U>): void {
 
@@ -110,6 +115,17 @@ export class Treap<T,U> {
       this.root = node;
   }
 
+  private compare(keyA:T,keyB:T): number {
+
+    if ( typeof keyA == "number" && typeof keyB == "number" )
+      return keyA - keyB;
+
+    if ( this.compare == null || typeof this.compare != "function" )
+      throw new Error("When keys are not numbers a valid compare function must be specified")
+    
+    return this.comparator( keyA,keyB );
+  }
+
   insert(key:T,value?:U): void {
 
     // disallow dupes
@@ -126,7 +142,7 @@ export class Treap<T,U> {
     // we want to know the parent node when either left or right is null, aka a leaf
     while( node != null ){
       parent = node;
-      if ( key > node.key ){
+      if ( this.compare(key,node.key) > 0 ){
         node = node.right;
       } else {
         node = node.left;
@@ -140,7 +156,7 @@ export class Treap<T,U> {
     }
 
     // now we have the parent, we can assign the newNode to its correct leaf position
-    if( key > parent.key ){
+    if ( this.compare(key,parent.key) > 0 ){
       parent.right = newNode;
     } else {
       parent.left = newNode;
@@ -159,22 +175,28 @@ export class Treap<T,U> {
     }
   }
 
+  /**
+   * Search for a node with a given key
+   * @param node The root of the subtree to search within
+   * @param key The key to search for
+   * @returns 
+   */
   private search(node:Node<T,U>, key:T): Node<T,U> {
     // cannot find the key
-    if( node == null )
+    if ( node == null )
       return null;
 
     // return the matched node
-    if( node.key == key )
+    if ( node.key == key )
       return node;
     
     // key is smaller, recursively search left branch
-    if( key < node.key )
-      return this.search(node.left, key);
+    if ( this.compare( key,node.key ) < 0 )
+      return this.search( node.left, key );
 
     // key is larger, recursively search the right branch
-    if( key > node.key )
-      return this.search(node.right, key);
+    if ( this.compare( key,node.key ) > 0 )
+      return this.search( node.right, key );
   }
 
   /**
@@ -184,13 +206,13 @@ export class Treap<T,U> {
    * @param key T - the key of the node to remove
    */
   remove(key:T): boolean {
-    let node = this.search(this.root, key);
+    let node = this.search( this.root, key );
 
     // no node
     if( node == null ) {
     // or the only node
       return true;
-    } else if( (node.isLeaf() && node.isRoot()) ){
+    } else if ( node.isLeaf() && node.isRoot() ){
       this.root = null;
       return true;
     }
@@ -233,7 +255,7 @@ export class Treap<T,U> {
    * @returns 
    */
   contains(key:T): boolean {
-    return this.search(this.root, key) != null;
+    return this.search( this.root, key ) != null;
   }
 
   /**
@@ -316,6 +338,6 @@ export class Treap<T,U> {
    * @returns – the successor of `key`
    */
   successor(key:T): U {
-    return
+    return;
   }
 }

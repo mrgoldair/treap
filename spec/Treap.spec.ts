@@ -22,3 +22,27 @@ describe('Satisfies binary search tree invariants', () => {
     );
   });
 })
+
+type LineDesc = { mx:number,c:number }
+
+describe('Sorting complex objects', () => {
+  it('Can sort complex objects based on custom comparator', () => {
+    fc.assert(
+      fc.property(fc.array(fc.record({mx:fc.nat(),c:fc.nat()}), {maxLength:50}), events => {
+        
+        function lineComparator(xPos:number){
+          return (a:LineDesc,b:LineDesc): number => {
+            return (a.mx * xPos + a.c) - (b.mx * xPos + b.c)
+          }
+        }
+
+        let dictionary = new Treap<LineDesc,LineDesc>(lineComparator(4));
+        events.forEach(e => dictionary.insert(e))
+
+        let sortedDictionary = minTraverse(dictionary.root);
+        events.sort(lineComparator(4));
+        
+        expect(sortedDictionary).toEqual(events);
+    }))
+  })
+})

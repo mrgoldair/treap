@@ -1,9 +1,10 @@
 {
   "name": "@mrgoldair/treap",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "An implementation of a treap data structure",
   "homepage": "https://github.com/mrgoldair/treap#readme",
-  "main": "dist/Treap.js",
+  "main": "lib/Treap.js",
+  "types": "lib/Treap.d.ts",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
