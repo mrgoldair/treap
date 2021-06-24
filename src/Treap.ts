@@ -265,18 +265,15 @@ export class Treap<T,U> {
    */
   max(node:Node<T,U> = this.root): T | U {
 
-    // our right-most, max value node
-    if ( node.isLeaf() )
+    if ( node == null )
+      return null;
+
+    // this node is our max – aka it's either a leaf (the end of the line), or we have no "right"
+    if ( node.isLeaf() || node.right == null )
       return node.value ?? node.key;
 
-    // it's not a leaf so may have left, right or both
-    if ( node.right ) {
-      // if it's got a right, keep going
-      return this.max( node.right );
-    } else {
-      // if all we have is a left, this node is our max
-      return node.value ?? node.key;
-    }
+    // we have a "right", so keep going
+    return this.max( node.right );
   }
 
   /**
@@ -324,12 +321,40 @@ export class Treap<T,U> {
   }
 
   /**
-   * 
+   * Returns the node preceding that which has a key of `key`
    * @param key – the key for which we want to find the predecessor of
    * @returns – the predecessor of `key`
    */
-  predecessor(key:T): U {
-    return;
+  predecessor(key:T): U | null {
+
+    if ( this.root == null )
+      return null;
+
+    let ancestor = this.root;
+    let node = this.root;
+
+    // find the node
+    while ( node != null && key != node.key ){
+      if ( key < node.key ) {
+        node = node.left;
+      } else {
+        ancestor = node;
+        node = node.right;
+      }
+    }
+
+    // the key doesn't exist
+    if ( node == null )
+      return null
+
+    // get the right-most of the left sub-tree OR parent if that's null
+    // minOf(max(left), ancestor)
+    let subtree = node.left;
+    while ( subtree?.right != null ){
+      subtree = subtree.right;
+    }
+
+    return (subtree != null ? subtree.value : ancestor.value);
   }
 
   /**

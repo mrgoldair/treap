@@ -15,7 +15,6 @@ const max = ({ key, _, right }) => {
   return key;
 }
 
-// List.js
 export const minTraverse = ( node, acc = []) => {
   
   if ( !node )
@@ -33,6 +32,23 @@ export const minTraverse = ( node, acc = []) => {
   if ( right ){
     minTraverse( right,acc );
   }
+
+  return acc;
+}
+
+export const childTraverse = (node,acc = []) => {
+  if ( !node )
+    return acc;
+  
+  let { left, right, priority } = node;
+
+  if ( left )
+    childTraverse( left, acc );
+  
+  if ( right )
+    childTraverse( right, acc );
+  
+  acc.push( priority );
 
   return acc;
 }
