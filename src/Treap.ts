@@ -38,7 +38,7 @@ export class Node<T,U> {
   }
 }
 
-export class Treap<T,U> {
+export default class Treap<T,U> {
   root:Node<T,U>;
   comparator:(a:T,b:T) => number;
   

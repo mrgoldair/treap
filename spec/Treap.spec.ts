@@ -1,5 +1,5 @@
 import * as fc from 'fast-check';
-import { Treap } from '../src/Treap';
+import Treap from '../src/Treap';
 import { minTraverse,childTraverse } from '../src/TreeUtils';
 
 describe('Finding predecessors', () => {
