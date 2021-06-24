@@ -13,7 +13,7 @@ export declare class Node<T, U> {
     isLeaf(): boolean;
     highestPriorityChild(): Node<T, U>;
 }
-export declare class Treap<T, U> {
+export default class Treap<T, U> {
     root: Node<T, U>;
     comparator: (a: T, b: T) => number;
     constructor(comparator?: (a: T, b: T) => number);
@@ -60,11 +60,11 @@ export declare class Treap<T, U> {
      */
     update(key: T, priority: number): void;
     /**
-     *
+     * Returns the node preceding that which has a key of `key`
      * @param key – the key for which we want to find the predecessor of
      * @returns – the predecessor of `key`
      */
-    predecessor(key: T): U;
+    predecessor(key: T): U | null;
     /**
      *
      * @param key – the key for which we want to find the predecessor of
