@@ -66,9 +66,9 @@ export default class Treap<T, U> {
      */
     predecessor(key: T): U | null;
     /**
-     *
+     * Returns the node successive to the node which has key of `key`
      * @param key – the key for which we want to find the predecessor of
-     * @returns – the successor of `key`
+     * @returns – the successor of `key`, if any
      */
     successor(key: T): U;
 }

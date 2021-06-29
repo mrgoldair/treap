@@ -19,17 +19,34 @@ describe('Finding predecessors', () => {
   it('returns value of element with the closest lesser key', () => {
     fc.assert(fc.property(fc.set(fc.nat(1000),{minLength:2}), data => {
 
-        let treap = new Treap<number,number>();
+      let treap = new Treap<number,number>();
 
-        data.forEach(n => {
-          treap.insert( n,n );
-        });
+      data.forEach(n => {
+        treap.insert( n,n );
+      });
 
-        data.sort((a,b) => a - b);
+      data.sort((a,b) => a - b);
 
-        let [a,b] = data;
+      let [a,b] = data;
 
-        expect(treap.predecessor(b)).toEqual(a);
+      expect(treap.predecessor(b)).toEqual(a);
+    }));
+  })
+
+  it('returns value of element with the closest greater key', () => {
+    fc.assert(fc.property(fc.set(fc.nat(1000),{minLength:3}), data => {
+
+      let treap = new Treap<number,number>();
+
+      data.forEach(n => {
+        treap.insert( n,n );
+      });
+
+      data.sort((a,b) => a - b);
+
+      let [_,b,c] = data;
+
+      expect(treap.successor(b)).toEqual(c);
     }));
   })
 })
