@@ -123,7 +123,7 @@ export default class Treap<T,U> {
     if ( this.compare == null || typeof this.compare != "function" )
       throw new Error("When keys are not numbers a valid compare function must be specified")
     
-    return this.comparator( keyA,keyB );
+    return this.comparator( keyA, keyB );
   }
 
   insert(key:T,value?:U): void {
@@ -142,7 +142,7 @@ export default class Treap<T,U> {
     // we want to know the parent node when either left or right is null, aka a leaf
     while( node != null ){
       parent = node;
-      if ( this.compare(key,node.key) > 0 ){
+      if ( this.compare( key, node.key ) > 0 ){
         node = node.right;
       } else {
         node = node.left;
@@ -156,7 +156,7 @@ export default class Treap<T,U> {
     }
 
     // now we have the parent, we can assign the newNode to its correct leaf position
-    if ( this.compare(key,parent.key) > 0 ){
+    if ( this.compare( key, parent.key ) > 0 ){
       parent.right = newNode;
     } else {
       parent.left = newNode;
@@ -187,15 +187,15 @@ export default class Treap<T,U> {
       return null;
 
     // return the matched node
-    if ( node.key == key )
+    if ( this.compare( key, node.key ) == 0 )
       return node;
     
     // key is smaller, recursively search left branch
-    if ( this.compare( key,node.key ) < 0 )
+    if ( this.compare( key, node.key ) < 0 )
       return this.search( node.left, key );
 
     // key is larger, recursively search the right branch
-    if ( this.compare( key,node.key ) > 0 )
+    if ( this.compare( key, node.key ) > 0 )
       return this.search( node.right, key );
   }
 
@@ -334,8 +334,8 @@ export default class Treap<T,U> {
     let node = this.root;
 
     // find the node
-    while ( node != null && key != node.key ){
-      if ( key < node.key ) {
+    while ( node != null && this.compare( key, node.key ) != 0 ){
+      if ( this.compare( key, node.key ) < 0 ) {
         node = node.left;
       } else {
         ancestor = node;
@@ -371,8 +371,8 @@ export default class Treap<T,U> {
     let node = this.root;
 
     // find the node
-    while ( node != null && key != node.key ){
-      if ( key < node.key ) {
+    while ( node != null && this.compare( key, node.key ) != 0 ){
+      if ( this.compare( key, node.key ) < 0 ) {
         ancestor = node;
         node = node.left;
       } else {

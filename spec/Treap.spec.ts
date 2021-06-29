@@ -38,7 +38,7 @@ describe('Finding predcessors and successors', () => {
     }));
   })
 
-  xit('returns value of element with the closest lesser key', () => {
+  it('returns value of element with the closest lesser key', () => {
     fc.assert(fc.property(fc.set(fc.nat(1000),{minLength:2}), data => {
 
       let treap = new Treap<number,number>();
@@ -55,7 +55,7 @@ describe('Finding predcessors and successors', () => {
     }));
   })
 
-  xit('returns value of element with the closest greater key', () => {
+  it('returns value of element with the closest greater key', () => {
     fc.assert(fc.property(fc.set(fc.nat(1000),{minLength:3}), data => {
 
       let treap = new Treap<number,number>();
@@ -113,23 +113,38 @@ describe('Invariants', () => {
 
 xdescribe('Sorting complex objects', () => {
   
-  type LineDesc = { mx:number,c:number }
+  type Point = { x:number, y:number }
+  type LineDesc = { mx:number, point:Point }
 
   it('Can sort complex objects based on custom comparator', () => {
     fc.assert(
-      fc.property(fc.array(fc.record({mx:fc.nat(),c:fc.nat()}), {maxLength:50}), events => {
-        
-        function lineComparator(xPos:number){
-          return (a:LineDesc,b:LineDesc): number => {
-            return (a.mx * xPos + a.c) - (b.mx * xPos + b.c)
-          }
+      fc.property(fc.array(fc.record({mx:fc.integer(1,5),point:fc.record({ x:fc.nat(5), y:fc.nat(5) })}),{ minLength:2, maxLength:10 }), _events => {
+
+        let events = [
+          {
+            mx: 1,
+            point: {
+              x:0,
+              y:2
+            }
+          },{
+            mx: 3,
+            point: {
+              x:0,
+              y:2
+            }
+        }];
+
+        function lineComparator(a:LineDesc,b:LineDesc): number {
+          let { point } = a;
+          return point.y - ((b.mx * (point.x - b.point.x)) + b.point.y)
         }
 
-        let dictionary = new Treap<LineDesc,LineDesc>(lineComparator(4));
+        let dictionary = new Treap<LineDesc,LineDesc>(lineComparator);
         events.forEach(e => dictionary.insert(e))
 
         let sortedDictionary = minTraverse(dictionary.root);
-        events.sort(lineComparator(4));
+        events.sort(lineComparator);
         
         expect(sortedDictionary).toEqual(events);
     }))

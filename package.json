@@ -1,6 +1,6 @@
 {
   "name": "@mrgoldair/treap",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "An implementation of a treap data structure",
   "homepage": "https://github.com/mrgoldair/treap#readme",
   "main": "lib/Treap.js",
