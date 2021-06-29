@@ -327,7 +327,7 @@ export default class Treap<T,U> {
    */
   predecessor(key:T): U | null {
 
-    if ( this.root == null )
+    if ( this.root == null || this.root.isLeaf() )
       return null;
 
     let ancestor = this.root;
@@ -364,7 +364,7 @@ export default class Treap<T,U> {
    */
   successor(key:T): U {
 
-    if ( this.root == null )
+    if ( this.root == null || this.root.isLeaf() )
       return null;
 
     let ancestor = this.root;
