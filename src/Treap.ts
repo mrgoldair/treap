@@ -330,7 +330,7 @@ export default class Treap<T,U> {
     if ( this.root == null || this.root.isLeaf() )
       return null;
 
-    let ancestor = this.root;
+    let ancestor:Node<T,U>;
     let node = this.root;
 
     // find the node
@@ -354,7 +354,7 @@ export default class Treap<T,U> {
       subtree = subtree.right;
     }
 
-    return (subtree != null ? subtree.value : ancestor.value);
+    return (subtree != null ? subtree.value : ancestor?.value);
   }
 
   /**
@@ -367,7 +367,7 @@ export default class Treap<T,U> {
     if ( this.root == null || this.root.isLeaf() )
       return null;
 
-    let ancestor = this.root;
+    let ancestor:Node<T,U>;
     let node = this.root;
 
     // find the node
@@ -391,6 +391,6 @@ export default class Treap<T,U> {
       subtree = subtree.left;
     }
 
-    return (subtree != null ? subtree.value : ancestor.value);
+    return (subtree != null ? subtree.value : ancestor?.value);
   }
 }
